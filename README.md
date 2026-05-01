@@ -10,9 +10,20 @@ This version automatically enumerates all SUID world-readable binaries on the ta
 
 ## What is CVE-2026-31431 (copy-fail)?
 
-CVE-2026-31431 is a Linux kernel vulnerability that allows an unprivileged user to overwrite arbitrary bytes in read-only, SUID-root files via a race condition in the `splice(2)` path of the AF_ALG (kernel crypto API) socket implementation. Because the write bypasses permission checks on the page cache, a world-readable SUID binary can be patched in-place without write access, leading to local privilege escalation.
+Discovered by **Theori** and publicly disclosed **April 29, 2026**, Copy.Fail is a logic flaw in the Linux kernel's `algif_aead` crypto module introduced through a **2017 optimization**. It affects every mainstream Linux distribution since 2017.
 
-**Affected kernels:** See [grenkoca's original PoC](https://gist.github.com/grenkoca/b82281a4706e936072979acf54b608df) for the full version range.
+By manipulating the kernel's AF_ALG crypto interface, an unprivileged attacker can write controlled data directly into the Linux **page cache** - the in-memory representation of trusted system binaries. This allows temporarily hijacking binaries like `/usr/bin/su` **without modifying the file on disk**, making disk-based forensics blind to the attack.
+
+Unlike many LPE flaws that depend on race conditions or kernel address leaks, Copy.Fail is highly reliable and works consistently with only a standard user account.
+
+**Impact:**
+- Normal user → root on any affected system
+- Container escape to host
+- CI/CD job roots its runner
+- Shared/multi-tenant infrastructure compromised across tenants
+- No on-disk file modification (evades integrity checks)
+
+**Affected kernels:** Every distribution since 2017. See [grenkoca's original PoC](https://gist.github.com/grenkoca/b82281a4706e936072979acf54b608df) for the specific version range.
 
 ---
 
@@ -116,4 +127,12 @@ root
 ## Credits
 
 - **grenkoca** - [original Python PoC](https://gist.github.com/grenkoca/b82281a4706e936072979acf54b608df)
+- **Theori** - vulnerability discovery
 - This repo is an unminified Go port with automatic target enumeration
+
+---
+
+## References
+
+- [OVHcloud: Copy.Fail - How to Rapidly Protect MKS Clusters from the Linux Kernel Zero-Day](https://blog.ovhcloud.com/copy-fail-cve-2026-31431-how-to-rapidly-protect-ovhcloud-mks-clusters-from-the-linux-kernel-zero-day/)
+- [grenkoca's original Python PoC (gist)](https://gist.github.com/grenkoca/b82281a4706e936072979acf54b608df)
