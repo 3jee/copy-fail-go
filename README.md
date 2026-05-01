@@ -2,7 +2,7 @@
 
 Go port of [grenkoca](https://gist.github.com/grenkoca/b82281a4706e936072979acf54b608df)'s Python PoC for **CVE-2026-31431** (copy-fail).
 
-This version automatically enumerates all SUID world-readable binaries on the target and lets you choose which one to exploit interactively.
+This version compiles to a fully static binary with zero runtime dependencies - no Python, no pip, no libc version constraints. Drop it on any Linux target and run it. It also automatically enumerates all SUID world-readable binaries on the target and lets you choose which one to exploit interactively.
 
 > **For authorized security research and CTF use only.**
 
