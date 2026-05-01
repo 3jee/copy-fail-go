@@ -1,6 +1,6 @@
 # copy-fail-go
 
-Go port of [grenkoca](https://github.com/grenkoca)'s Python PoC for **CVE-2026-31431** (copy-fail).
+Go port of [grenkoca](https://gist.github.com/grenkoca/b82281a4706e936072979acf54b608df)'s Python PoC for **CVE-2026-31431** (copy-fail).
 
 This version automatically enumerates all SUID world-readable binaries on the target and lets you choose which one to exploit interactively.
 
@@ -12,7 +12,7 @@ This version automatically enumerates all SUID world-readable binaries on the ta
 
 CVE-2026-31431 is a Linux kernel vulnerability that allows an unprivileged user to overwrite arbitrary bytes in read-only, SUID-root files via a race condition in the `splice(2)` path of the AF_ALG (kernel crypto API) socket implementation. Because the write bypasses permission checks on the page cache, a world-readable SUID binary can be patched in-place without write access, leading to local privilege escalation.
 
-**Affected kernels:** See [grenkoca's original advisory](https://github.com/grenkoca) for the full version range.
+**Affected kernels:** See [grenkoca's original PoC](https://gist.github.com/grenkoca/b82281a4706e936072979acf54b608df) for the full version range.
 
 ---
 
@@ -115,5 +115,5 @@ root
 
 ## Credits
 
-- **grenkoca** - original Python PoC and vulnerability discovery
+- **grenkoca** - [original Python PoC](https://gist.github.com/grenkoca/b82281a4706e936072979acf54b608df)
 - This repo is an unminified Go port with automatic target enumeration
